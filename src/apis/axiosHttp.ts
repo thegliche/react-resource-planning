@@ -5,16 +5,16 @@ const axiosHttp = axios.create({
   // where we make our configurations
   baseURL: env.ApiServerUrl,
   headers: {
-    "Content-type": "application/json"
-  }
+    'Content-type': 'application/json',
+  },
 });
 
 // Add configure interceptors && all the other cool stuff
 axiosHttp.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
+  (error) => {
     return Promise.reject(error.message);
   },
 );

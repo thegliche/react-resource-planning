@@ -1,7 +1,7 @@
 import NotFound from '@/components/common/NotFound';
 import Login from '@/views/Login';
 import Home from '@/views/home/Home';
-import Subpage from "@/views/home/subpage/Subpage";
+import Subpage from '@/views/home/subpage/Subpage';
 
 export default [
   {
