@@ -1,5 +1,5 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
@@ -80,23 +80,12 @@ module.exports = {
     clean: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      // Change this to be product name
-      title: 'react-template',
-      filename: "[name].html",
-      templateContent: `
-        <html>
-          <body>
-            <div id="app"></div>
-          </body>
-        </html>
-      `
-    }),
+    new NodePolyfillPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new ESLintPlugin({
-      extensions: [`js`, `jsx`, 'tsx'],
-      exclude: [`/node_modules/`],
-      }
-    )
+      extensions: ['js', 'jsx', 'tsx'],
+      exclude: ['**/node_modules/**'],
+    },
+    ),
   ],
 };

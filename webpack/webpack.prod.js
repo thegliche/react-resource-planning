@@ -1,21 +1,41 @@
 const {merge} = require('webpack-merge');
+const webpack = require('webpack');
 const common = require('./webpack.common.js');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const path = require('path');
+const Dotenv = require('dotenv-webpack');
 // TODO: extracting CSS based on entry when importing routes dynamically
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   cache: false,
   plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, '../.env.production'),
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css",
+      filename: '[name].css',
+      chunkFilename: '[id].css',
     }),
     new HtmlWebpackPlugin({
+      // Change this to be product name
+      title: 'vhb-resourceplanning',
+      filename: '[name].html',
+      templateContent: `
+         <!DOCTYPE html>
+         <html>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <body id="root">
+            <div id="app"></div>
+          </body>
+        </html>
+      `,
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -34,7 +54,7 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
@@ -42,16 +62,16 @@ module.exports = merge(common, {
     splitChunks: {
       cacheGroups: {
         styles: {
-          name: "styles",
-          type: "css/mini-extract",
-          chunks: "all",
+          name: 'styles',
+          type: 'css/mini-extract',
+          chunks: 'all',
           enforce: true,
         },
       },
     },
     minimize: true,
     minimizer: [
-      `...`,
+      '...',
       new TerserPlugin(),
       new CssMinimizerPlugin(),
     ],
