@@ -2,6 +2,7 @@ const path = require('path');
 const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -12,12 +13,12 @@ module.exports = merge(common, {
     static: {
       directory: path.join(__dirname, '../dist'),
     },
-    hot:true,
+    hot: true,
     port: 9000,
     compress: true,
     historyApiFallback: true,
     // config the proxy when api needed
-/*    proxy: {
+    /*    proxy: {
       '/api': {
         target: 'https://other-server.example.com',
         secure: false,
@@ -25,9 +26,23 @@ module.exports = merge(common, {
     },*/
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      // Change this to be product name
+      title: 'vhb-resourceplanning',
+      filename: '[name].html',
+      templateContent: `
+         <!DOCTYPE html>
+         <html>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <body id="root">
+            <div id="app"></div>
+          </body>
+        </html>
+      `,
+    }),
     new Dotenv({
-      path: path.resolve(__dirname, '../.eng.development'),
-    })
+      path: path.resolve(__dirname, '../.env.development'),
+    }),
   ],
   optimization: {
     usedExports: true,
