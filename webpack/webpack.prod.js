@@ -1,4 +1,6 @@
-const {merge} = require('webpack-merge');
+const {
+  merge,
+} = require('webpack-merge');
 const webpack = require('webpack');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,15 +8,19 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const Dotenv = require('dotenv-webpack');
+
+require('dotenv').config({
+  path: path.resolve(__dirname, '../.env.production'),
+});
+
 // TODO: extracting CSS based on entry when importing routes dynamically
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
   cache: false,
   plugins: [
-    new Dotenv({
-      path: path.resolve(__dirname, '../.env.production'),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
     }),
     new webpack.ProvidePlugin({
       process: 'process/browser',
@@ -25,7 +31,7 @@ module.exports = merge(common, {
     }),
     new HtmlWebpackPlugin({
       // Change this to be product name
-      title: 'vhb-resourceplanning',
+      title: 'react structure template',
       filename: '[name].html',
       templateContent: `
          <!DOCTYPE html>
@@ -51,12 +57,13 @@ module.exports = merge(common, {
     }),
   ],
   module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-    ],
+    rules: [{
+      test: /\.css$/,
+      use: [
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+      ],
+    }],
   },
   optimization: {
     splitChunks: {
